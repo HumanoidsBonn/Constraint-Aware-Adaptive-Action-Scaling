@@ -4,19 +4,23 @@ Safe Reinforcement Learning (RL) often struggles to balance task performance wit
 ## Implementation Details
 
 **Decoupled Objectives**: Reward maximization (`SACActor`) is separated from safety enforcement (`SACREG`) to prevent conflicting gradients.
+
 **Twin Critics**: The framework utilizes `TwinQNets` for task rewards and `TwinCNets` for conservative, robust cost estimation.
 
 
 ### Action Modulation
 
 **Adaptive Scaling**: Raw actions are modulated via element-wise multiplication: $\tilde{a}_{t}=\rho_{t}\odot a_{t}$.
+
 **Scaling Vector**: The regulator outputs a vector $\rho \in (0, 1]^d$ using sigmoid activation, allowing fine-grained control over specific risky joints.
 
 
 ### Optimization Strategy
 
 **Regulator Loss**: The training objective balances predicted cost minimization ($Q_c$) with a logarithmic barrier penalty ($-\log \rho$) to prevent action collapse.
+
 **Stable Training**: Updates for both reward and cost critics are based on the actual executed (regulated) actions to ensure accurate off-policy learning.
+
 **Gradient Isolation**: Scaling weights are detached during critic updates to maintain clean modularity between task and safety modules.
 
 
